@@ -9,7 +9,7 @@ while True:
         resized = cv2.resize(frame, (800, 550)); #resize the frame
         cv2.imshow("Frame", resized); #display the frame on desktop
 
-    key = cv2.waitKey(1); #to exit the frame press '1'
+    key = cv2.waitKey(1); #to exit the frame press 'q'
     if key == ord("q"):
         break;
 
