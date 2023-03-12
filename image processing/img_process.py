@@ -1,6 +1,7 @@
 import cv2
 import matplotlib.pyplot as plt
 import numpy as np
+from IPython import display
 
 # rgb with numpy histogram manual
 def rgbChannels(img):
@@ -28,6 +29,31 @@ def rgbChannelsMatlotlib(img):
 
     plt.show()
 
+
+#split into 3 channels
+def splitRgb(img):
+    height, width, channels = img.shape
+    if channels >= 3:
+        B, G, R = cv2.split(img[:, :, :3])  # Only split the first three channels
+    elif channels == 1:  # Grayscale image
+        R = G = B = img
+    else:
+        raise ValueError("Input image must have at least 3 channels")
+
+    zeroMatrix = np.zeros((height, width), dtype="uint8")
+    R = cv2.merge([R, zeroMatrix, zeroMatrix])
+    G = cv2.merge([zeroMatrix, G, zeroMatrix])
+    B = cv2.merge([zeroMatrix, zeroMatrix, B])
+    rgb = [B,G,R]
+    for i,el in enumerate(rgb):
+        plt.subplot(1,3,i+1)
+        plt.imshow(el)
+        plt.xticks([])
+        plt.yticks([])
+    plt.show()
+    
+
 img = cv2.imread('photo_sample.png')
 assert img is not None, "file could not be read"
 rgbChannels(img)
+splitRgb(img)
