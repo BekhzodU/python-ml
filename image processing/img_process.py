@@ -2,7 +2,7 @@ import cv2
 import matplotlib.pyplot as plt
 import numpy as np
 
-# rgb with numpy histogram
+# rgb with numpy histogram manual
 def rgbChannels(img):
     nb_bins = 256
     x = np.array(img).transpose(2,0,1)
@@ -17,6 +17,14 @@ def rgbChannels(img):
     fig = plt.figure()
     for i, el in enumerate(counts):
         plt.bar(bins[:-1], el, color=colors[i], alpha=0.4)
+
+    plt.show()
+
+# rgb histogram with matplotlib
+def rgbChannelsMatlotlib(img):
+    color = ('blue','red', 'green')
+    for i, col in enumerate(color):
+        plt.hist(img[:,:,i].ravel(), bins=256, color=col, alpha=0.3+i*0.05)
 
     plt.show()
 
