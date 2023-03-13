@@ -7,6 +7,7 @@ from skimage.color import rgb2gray
 from skimage.morphology import (erosion, dilation, closing, opening,
                                 area_closing, area_opening)
 from skimage.feature import blob_dog, blob_log, blob_doh
+from skimage import io, measure
 
 # rgb with numpy histogram manual
 def rgbChannels(img):
@@ -69,6 +70,30 @@ def contour(img):
     plt.subplot(1,3,3)
     plt.contourf(data,linestyles='solid', cmap='inferno')
     plt.tight_layout()
+    plt.show()
+
+
+def countourChatGRTversion(image):
+    fig, (ax0, ax1, ax2) = plt.subplots(nrows=1, ncols=3, figsize=(12, 4))
+    ax0.imshow(image)
+    ax0.set_title("Original Image")
+
+    contours = measure.find_contours(image[:,:,0], 0.8)
+
+    ax1.imshow(image)
+    for contour in contours:
+        ax1.plot(contour[:, 1], contour[:, 0], linewidth=2, color='red')
+    ax1.set_title("Contour Lines")
+
+    ax2.imshow(image)
+    for contour in contours:
+        ax2.fill(contour[:, 1], contour[:, 0], color='red', alpha=0.3)
+    ax2.set_title("Filled Contours")
+
+    for ax in [ax0, ax1, ax2]:
+        ax.set_xticks([])
+        ax.set_yticks([])
+
     plt.show()
 
 
