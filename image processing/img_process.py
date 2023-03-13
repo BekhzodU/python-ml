@@ -1,6 +1,7 @@
 import cv2
 import matplotlib.pyplot as plt
 import numpy as np
+import scipy
 from IPython import display
 
 # rgb with numpy histogram manual
@@ -53,7 +54,43 @@ def splitRgb(img):
     plt.show()
     
 
+def contour(img):
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    data = np.flipud(np.asarray(img))
+    data = np.asarray(img)
+    plt.subplot(1,3,1)
+    plt.imshow(cv2.cvtColor(img, cv2.COLOR_GRAY2RGB))
+    plt.subplot(1,3,2)
+    plt.contour(data, linestyles='solid', colors='black',extent=[0, img.shape[1], 0, img.shape[0]])
+    plt.subplot(1,3,3)
+    plt.contourf(data,linestyles='solid', cmap='inferno')
+    plt.tight_layout()
+    plt.show()
+
+
+def convolution(img):
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    kernel_size = 15
+    sigma = 5
+    kernel = cv2.getGaussianKernel(kernel_size, sigma)
+    gaussian_kernel = np.outer(kernel, kernel.transpose())
+    blurred = cv2.filter2D(gray, -1, gaussian_kernel)
+    laplacian_kernel = np.array([[0, 1, 0], [1, -4, 1], [0, 1, 0]])
+    edges = cv2.filter2D(blurred, -1, laplacian_kernel)
+    plt.subplot(1, 3, 1)
+    plt.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
+    plt.title('Original Image ')
+
+    plt.subplot(1, 3, 2)
+    plt.imshow(blurred, cmap='gray')
+    plt.title('Box Blur')
+
+    plt.subplot(1, 3, 3)
+    plt.imshow(edges, cmap='gray')
+    plt.title('Laplace Edge Detection')
+    plt.tight_layout()
+    plt.show()
+
 img = cv2.imread('photo_sample.png')
 assert img is not None, "file could not be read"
-rgbChannels(img)
-splitRgb(img)
+convolution(img)
