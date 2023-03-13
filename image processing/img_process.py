@@ -2,9 +2,11 @@ import cv2
 import matplotlib.pyplot as plt
 import numpy as np
 import scipy
-from IPython import display
-from skimage import data, img_as_float
 from skimage.feature import corner_harris, corner_subpix, corner_peaks
+from skimage.color import rgb2gray
+from skimage.morphology import (erosion, dilation, closing, opening,
+                                area_closing, area_opening)
+from skimage.feature import blob_dog, blob_log, blob_doh
 
 # rgb with numpy histogram manual
 def rgbChannels(img):
@@ -109,6 +111,34 @@ def harrisCorners(img):
     plt.show()
 
 
-img = cv2.imread('photo-sample.png')
+def multi_dil(im, num, element):
+    for i in range(num):
+        im = dilation(im, element)
+    return im
+
+def multi_ero(im, num, element):
+    for i in range(num):
+        im = erosion(im, element)
+    return im
+
+def morphologicalPreprocess(img):
+    binary = rgb2gray(img)<0.15
+    element = np.array([[0,0,0,0,0,0,0],
+                    [0,0,1,1,1,0,0],
+                    [0,1,1,1,1,1,0],
+                    [0,1,1,1,1,1,0],
+                    [0,1,1,1,1,1,0],
+                    [0,0,1,1,1,0,0],
+                    [0,0,0,0,0,0,0]])
+    multi_eroded = multi_ero(binary, 2, element)
+    opened = opening(multi_eroded, element)
+    multi_diluted = multi_dil(opened, 2, element)
+    area_morphed = area_opening(area_closing(multi_diluted, 1000), 1000)
+    return area_morphed
+    
+
+img = cv2.imread('photo_sample.png')
 assert img is not None, "file could not be read"
-harrisCorners(img)
+cleaned = morphologicalPreprocess(img)
+cv2.imwrite('cleaned.jpg', np.array(cleaned))
+
