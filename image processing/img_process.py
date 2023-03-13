@@ -170,6 +170,7 @@ def blobDetection(img):
     plt.tight_layout()
     plt.show()
 
+
 img = cv2.imread('flash.png')
 assert img is not None, "file could not be read"
 blobDetection(img)
