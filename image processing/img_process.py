@@ -136,9 +136,41 @@ def morphologicalPreprocess(img):
     area_morphed = area_opening(area_closing(multi_diluted, 1000), 1000)
     return area_morphed
     
+class obj:
+    def __init__(self, title, x, y, blobList, color):
+        self.title = title
+        self.x = x
+        self.y = y
+        self.blobList = blobList
+        self.color = color
 
-img = cv2.imread('photo_sample.png')
+def blobDetection(img):
+    cleanedImg = morphologicalPreprocess(img)
+    blobsL = blob_log(cleanedImg, min_sigma=15)
+    blobsD = blob_dog(cleanedImg, min_sigma=5, threshold=0.1)
+    blobsH = blob_doh(cleanedImg, min_sigma=35)
+
+    params = list()
+    params.append(obj('Original Image', 0, 0, list(), ''))
+    params.append(obj('Blobs with Laplacian of Gaussian', 0, 1, blobsL, 'yellow'))
+    params.append(obj('Blobs with Difference of Gaussian', 1, 0, blobsD, 'green'))
+    params.append(obj('Blobs with Determinant of Hessian', 1, 1, blobsH, 'red'))
+
+    fig, ax = plt.subplots(2,2,figsize=(7,7))
+
+    for el in params:
+        ax[el.x,el.y].imshow(cv2.cvtColor(img, cv2.COLOR_RGB2BGR))
+        ax[el.x,el.y].set_title(el.title)
+        ax[el.x,el.y].set_xticks([])
+        ax[el.x,el.y].set_yticks([])
+        for blob in el.blobList:
+            y, x, area = blob
+            ax[el.x,el.y].add_patch(plt.Circle((x, y), area*np.sqrt(2), color=el.color, fill=False))
+    
+    plt.tight_layout()
+    plt.show()
+
+img = cv2.imread('flash.png')
 assert img is not None, "file could not be read"
-cleaned = morphologicalPreprocess(img)
-cv2.imwrite('cleaned.jpg', np.array(cleaned))
+blobDetection(img)
 
