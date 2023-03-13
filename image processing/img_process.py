@@ -3,6 +3,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import scipy
 from IPython import display
+from skimage import data, img_as_float
+from skimage.feature import corner_harris, corner_subpix, corner_peaks
 
 # rgb with numpy histogram manual
 def rgbChannels(img):
@@ -91,6 +93,22 @@ def convolution(img):
     plt.tight_layout()
     plt.show()
 
-img = cv2.imread('photo_sample.png')
+
+def harrisCorners(img):
+    original = img
+    grayImg = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    h, w, _ = img.shape
+    img = np.array(grayImg)
+    coords = corner_peaks(corner_harris(grayImg), min_distance=15, threshold_rel=0.02)
+    _, ax = plt.subplots()
+    ax.imshow(cv2.cvtColor(original, cv2.COLOR_RGB2BGR))
+    ax.plot(coords[:, 1], coords[:, 0], color='red', marker='o', linestyle='None', markersize=3)
+    ax.axis((0, w, h, 0))
+    plt.xticks([])
+    plt.yticks([])
+    plt.show()
+
+
+img = cv2.imread('photo-sample.png')
 assert img is not None, "file could not be read"
-convolution(img)
+harrisCorners(img)
