@@ -25,6 +25,18 @@ def rotation(img):
     plt.yticks([])
     plt.show()
 
+def affineTransformation(img):
+    height, width = img.shape[:2]
+    src_points = np.float32([[0, 0], [width-1, 0], [0, height-1]])
+    dst_points = np.float32([[0, 0], [width * 0.6, 0], [width * 0.4, height - 1]])
+    M = cv2.getAffineTransform(src_points, dst_points)
+    transformed_img = cv2.warpAffine(img, M, (width, height))
+
+    plt.imshow(transformed_img)
+    plt.xticks([])
+    plt.yticks([])
+    plt.show()
+
 img = cv2.imread('newyork.jpeg')
 assert img is not None, "file could not be read"
-rotation(img)
+affineTransformation(img)
