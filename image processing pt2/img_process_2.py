@@ -8,7 +8,9 @@ def translation(img):
     rows, cols = img.shape[:2]
     M = np.float32([[1, 0, shift_x], [0, 1, shift_y]])
     translated_img = cv2.warpAffine(img, M, (cols, rows))
-    plt.imshow(translated_img)
+    image = cv2.cvtColor(translated_img, cv2.COLOR_RGB2BGR)
+
+    plt.imshow(image)
     plt.xticks([])
     plt.yticks([])
     plt.show()
@@ -19,8 +21,9 @@ def rotation(img):
     center = (width // 2, height // 2)
     M = cv2.getRotationMatrix2D(center, angle, 0.5)
     rotated_img = cv2.warpAffine(img, M, (width, height), borderMode=cv2.BORDER_CONSTANT)
+    image = cv2.cvtColor(rotated_img, cv2.COLOR_RGB2BGR)
 
-    plt.imshow(rotated_img)
+    plt.imshow(image)
     plt.xticks([])
     plt.yticks([])
     plt.show()
@@ -31,8 +34,9 @@ def affineTransformation(img):
     dst_points = np.float32([[0, 0], [width * 0.6, 0], [width * 0.4, height - 1]])
     M = cv2.getAffineTransform(src_points, dst_points)
     transformed_img = cv2.warpAffine(img, M, (width, height))
+    image = cv2.cvtColor(transformed_img, cv2.COLOR_RGB2BGR)
 
-    plt.imshow(transformed_img)
+    plt.imshow(image)
     plt.xticks([])
     plt.yticks([])
     plt.show()
@@ -40,6 +44,7 @@ def affineTransformation(img):
 def mirroring(img):
     horizontal_mirror = cv2.flip(img, 1)
     image = cv2.cvtColor(horizontal_mirror, cv2.COLOR_RGB2BGR)
+    
     plt.imshow(image)
     plt.xticks([])
     plt.yticks([])
@@ -50,12 +55,13 @@ def projectiveTransform(img):
     dst_pts = np.float32([[0, 0], [img.shape[1], 0], [300, img.shape[0]], [img.shape[1]-300, img.shape[0]]])
     M = cv2.getPerspectiveTransform(src_pts, dst_pts)
     projected_img = cv2.warpPerspective(img, M, (img.shape[1], img.shape[0]))
+    image = cv2.cvtColor(projected_img, cv2.COLOR_RGB2BGR)
 
-    plt.imshow(projected_img)
+    plt.imshow(image)
     plt.xticks([])
     plt.yticks([])
     plt.show()
 
 img = cv2.imread('newyork.jpeg')
 assert img is not None, "file could not be read"
-projectiveTransform(img)
+affineTransformation(img)
