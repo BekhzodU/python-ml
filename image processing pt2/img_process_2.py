@@ -37,6 +37,14 @@ def affineTransformation(img):
     plt.yticks([])
     plt.show()
 
+def mirroring(img):
+    horizontal_mirror = cv2.flip(img, 1)
+    image = cv2.cvtColor(horizontal_mirror, cv2.COLOR_RGB2BGR)
+    plt.imshow(image)
+    plt.xticks([])
+    plt.yticks([])
+    plt.show()
+
 img = cv2.imread('newyork.jpeg')
 assert img is not None, "file could not be read"
-affineTransformation(img)
+mirroring(img)
