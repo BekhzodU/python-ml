@@ -44,7 +44,7 @@ def affineTransformation(img):
 def mirroring(img):
     horizontal_mirror = cv2.flip(img, 1)
     image = cv2.cvtColor(horizontal_mirror, cv2.COLOR_RGB2BGR)
-    
+
     plt.imshow(image)
     plt.xticks([])
     plt.yticks([])
@@ -52,7 +52,7 @@ def mirroring(img):
 
 def projectiveTransform(img):
     src_pts = np.float32([[0, 0], [img.shape[1], 0], [0, img.shape[0]], [img.shape[1], img.shape[0]]])
-    dst_pts = np.float32([[0, 0], [img.shape[1], 0], [300, img.shape[0]], [img.shape[1]-300, img.shape[0]]])
+    dst_pts = np.float32([[0, 0], [img.shape[1], 0], [150, img.shape[0]], [img.shape[1]-150, img.shape[0]]])
     M = cv2.getPerspectiveTransform(src_pts, dst_pts)
     projected_img = cv2.warpPerspective(img, M, (img.shape[1], img.shape[0]))
     image = cv2.cvtColor(projected_img, cv2.COLOR_RGB2BGR)
@@ -62,6 +62,8 @@ def projectiveTransform(img):
     plt.yticks([])
     plt.show()
 
+
 img = cv2.imread('newyork.jpeg')
 assert img is not None, "file could not be read"
-affineTransformation(img)
+projectiveTransform(img)
+
