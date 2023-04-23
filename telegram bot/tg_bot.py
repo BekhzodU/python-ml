@@ -69,12 +69,11 @@ class FireDetection:
                 results = self.score_frame(frame)
                 frame, fireDetected = self.plot_boxes(results, frame)
                 cv2.imshow("Fire Detection", frame)
+                cv2.waitKey(1)
                 if fireDetected:
                     result = True
-                if cv2.waitKey(1) & 0xFF == ord('q'):
-                    break
                 
-
+                
         cap.release()
         cv2.destroyAllWindows()
         return result
