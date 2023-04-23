@@ -71,6 +71,8 @@ class FireDetection:
                 cv2.imshow("Fire Detection", frame)
                 if fireDetected:
                     result = True
+                if cv2.waitKey(1) & 0xFF == ord('q'):
+                    break
                 
 
         cap.release()
